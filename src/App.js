@@ -1,7 +1,14 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import Routes from 'routes';
 
-function App() {
-  return <div className='App'>Initial</div>;
-}
-
-export default App;
+export const App = () => {
+  return (
+    <div>
+      <h3>Welcome to hooks</h3>
+      <BrowserRouter>
+        <Routes />
+      </BrowserRouter>
+    </div>
+  );
+};
