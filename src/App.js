@@ -1,14 +1,16 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+
 import Routes from 'routes';
+import { TopBar } from 'components/TopBar';
 
 export const App = () => {
   return (
     <div>
-      <h3>Welcome to hooks</h3>
-      <BrowserRouter>
+      <Router>
+        <TopBar />
         <Routes />
-      </BrowserRouter>
+      </Router>
     </div>
   );
 };
