@@ -1,13 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export const Auth = () => {
+import { useFetch } from 'hooks/useFetch';
+
+export const Auth = (props) => {
+  const isLogin = props.match.path === '/login';
+  const pageTitle = isLogin ? 'Sign In' : 'Sign Up';
+  const descriptionLink = isLogin ? '/register' : '/login';
+  const descriptionText = isLogin ? 'Need an account?' : 'Have an account?';
+  const apiUrl = isLogin ? '/user/login' : '/users';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [{ response, isLoading, error }, doFetch] = useFetch(apiUrl);
+
+  console.log(isLogin);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(email, password);
+    const user = isLogin ? { email, password } : { email, password, username };
+    doFetch({
+      method: 'post',
+      data: {
+        user,
+      },
+    });
   };
 
   return (
@@ -15,12 +32,26 @@ export const Auth = () => {
       <div className="container page">
         <div className="row">
           <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">Sign in</h1>
+            <h1 className="text-xs-center">{pageTitle}</h1>
             <p className="text-xs-center">
-              <Link to="/register">Need an account?</Link>
+              <Link to={descriptionLink}>{descriptionText}</Link>
             </p>
+
             <form onSubmit={handleSubmit}>
               <fieldset>
+                {!isLogin && (
+                  <fieldset className="form-group">
+                    <input
+                      type="text"
+                      className="form-control form-control-lg"
+                      placeholder="Username"
+                      value={username}
+                      onChange={(e) => {
+                        setUsername(e.target.value);
+                      }}
+                    />
+                  </fieldset>
+                )}
                 <fieldset className="form-group">
                   <input
                     type="email"
@@ -43,8 +74,11 @@ export const Auth = () => {
                     }}
                   />
                 </fieldset>
-                <button className="btn btn-lg btn-primary pull-xs-right" type="submit">
-                  Sign in
+                <button
+                  disabled={isLoading}
+                  className="btn btn-lg btn-primary pull-xs-right"
+                  type="submit">
+                  {pageTitle}
                 </button>
               </fieldset>
             </form>
