@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { useFetch } from 'hooks/useFetch';
+import { useLocalStorage } from 'hooks/useLocalStorage';
 
 export const Auth = (props) => {
   const isLogin = props.match.path === '/login';
@@ -12,9 +13,9 @@ export const Auth = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const [{ response, isLoading, error }, doFetch] = useFetch(apiUrl);
-
-  console.log(isLogin);
+  const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false);
+  const [{ response, isLoading }, doFetch] = useFetch(apiUrl);
+  const [token, setToken] = useLocalStorage('token');
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -27,24 +28,36 @@ export const Auth = (props) => {
     });
   };
 
+  useEffect(() => {
+    if (!response) {
+      return;
+    }
+    setToken(response.user.token);
+    setIsSuccessfullSubmit(true);
+  }, [response, setToken]);
+
+  if (isSuccessfullSubmit) {
+    return <Redirect to='/' />;
+  }
+
   return (
-    <div className="auth-page">
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">{pageTitle}</h1>
-            <p className="text-xs-center">
+    <div className='auth-page'>
+      <div className='container page'>
+        <div className='row'>
+          <div className='col-md-6 offset-md-3 col-xs-12'>
+            <h1 className='text-xs-center'>{pageTitle}</h1>
+            <p className='text-xs-center'>
               <Link to={descriptionLink}>{descriptionText}</Link>
             </p>
 
             <form onSubmit={handleSubmit}>
               <fieldset>
                 {!isLogin && (
-                  <fieldset className="form-group">
+                  <fieldset className='form-group'>
                     <input
-                      type="text"
-                      className="form-control form-control-lg"
-                      placeholder="Username"
+                      type='text'
+                      className='form-control form-control-lg'
+                      placeholder='Username'
                       value={username}
                       onChange={(e) => {
                         setUsername(e.target.value);
@@ -52,22 +65,22 @@ export const Auth = (props) => {
                     />
                   </fieldset>
                 )}
-                <fieldset className="form-group">
+                <fieldset className='form-group'>
                   <input
-                    type="email"
-                    className="form-control form-control-lg"
-                    placeholder="Email"
+                    type='email'
+                    className='form-control form-control-lg'
+                    placeholder='Email'
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
                     }}
                   />
                 </fieldset>
-                <fieldset className="form-group">
+                <fieldset className='form-group'>
                   <input
-                    type="password"
-                    className="form-control form-control-lg"
-                    placeholder="Password"
+                    type='password'
+                    className='form-control form-control-lg'
+                    placeholder='Password'
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
@@ -76,8 +89,8 @@ export const Auth = (props) => {
                 </fieldset>
                 <button
                   disabled={isLoading}
-                  className="btn btn-lg btn-primary pull-xs-right"
-                  type="submit">
+                  className='btn btn-lg btn-primary pull-xs-right'
+                  type='submit'>
                   {pageTitle}
                 </button>
               </fieldset>
