@@ -11,14 +11,14 @@ export const Auth = (props) => {
   const pageTitle = isLogin ? 'Sign In' : 'Sign Up';
   const descriptionLink = isLogin ? '/register' : '/login';
   const descriptionText = isLogin ? 'Need an account?' : 'Have an account?';
-  const apiUrl = isLogin ? '/user/login' : '/users';
+  const apiUrl = isLogin ? '/users/login' : '/users';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false);
-  const [{ response, isLoading, error }, doFetch] = useFetch(apiUrl);
-  const [token, setToken] = useLocalStorage('token');
-  const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
+  const [{ isLoading, response, error }, doFetch] = useFetch(apiUrl);
+  const [, setToken] = useLocalStorage('token');
+  const [, setCurrentUserState] = useContext(CurrentUserContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -29,6 +29,7 @@ export const Auth = (props) => {
         user,
       },
     });
+    console.log('values', email, password);
   };
 
   useEffect(() => {
@@ -46,28 +47,27 @@ export const Auth = (props) => {
   }, [response, setCurrentUserState, setToken]);
 
   if (isSuccessfullSubmit) {
-    return <Redirect to='/' />;
+    return <Redirect to="/" />;
   }
 
   return (
-    <div className='auth-page'>
-      <div className='container page'>
-        <div className='row'>
-          <div className='col-md-6 offset-md-3 col-xs-12'>
-            <h1 className='text-xs-center'>{pageTitle}</h1>
-            <p className='text-xs-center'>
+    <div className="auth-page">
+      <div className="container page">
+        <div className="row">
+          <div className="col-md-6 offset-md-3 col-xs-12">
+            <h1 className="text-xs-center">{pageTitle}</h1>
+            <p className="text-xs-center">
               <Link to={descriptionLink}>{descriptionText}</Link>
             </p>
-
+            {error && <BackendErrorMessages backendErrors={error.errors} />}
             <form onSubmit={handleSubmit}>
-              {error && <BackendErrorMessages backendErrors={error.errors} />}
               <fieldset>
                 {!isLogin && (
-                  <fieldset className='form-group'>
+                  <fieldset className="form-group">
                     <input
-                      type='text'
-                      className='form-control form-control-lg'
-                      placeholder='Username'
+                      type="text"
+                      className="form-control form-control-lg"
+                      placeholder="Username"
                       value={username}
                       onChange={(e) => {
                         setUsername(e.target.value);
@@ -75,22 +75,22 @@ export const Auth = (props) => {
                     />
                   </fieldset>
                 )}
-                <fieldset className='form-group'>
+                <fieldset className="form-group">
                   <input
-                    type='email'
-                    className='form-control form-control-lg'
-                    placeholder='Email'
+                    type="email"
+                    className="form-control form-control-lg"
+                    placeholder="Email"
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
                     }}
                   />
                 </fieldset>
-                <fieldset className='form-group'>
+                <fieldset className="form-group">
                   <input
-                    type='password'
-                    className='form-control form-control-lg'
-                    placeholder='Password'
+                    type="password"
+                    className="form-control form-control-lg"
+                    placeholder="Password"
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
@@ -99,8 +99,8 @@ export const Auth = (props) => {
                 </fieldset>
                 <button
                   disabled={isLoading}
-                  className='btn btn-lg btn-primary pull-xs-right'
-                  type='submit'>
+                  className="btn btn-lg btn-primary pull-xs-right"
+                  type="submit">
                   {pageTitle}
                 </button>
               </fieldset>

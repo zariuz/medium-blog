@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
 import { useLocalStorage } from 'hooks/useLocalStorage';
@@ -11,12 +11,16 @@ export const useFetch = (url) => {
   const [options, setOptions] = useState({});
   const [token] = useLocalStorage('token');
 
-  const doFetch = (options = {}) => {
+  const doFetch = useCallback((options = {}) => {
     setOptions(options);
     setIsLoading(true);
-  };
+  }, []);
 
   useEffect(() => {
+    if (!isLoading) {
+      return;
+    }
+
     const requestOptions = {
       ...options,
       ...{
@@ -26,23 +30,16 @@ export const useFetch = (url) => {
       },
     };
 
-    if (!isLoading) {
-      return;
-    }
-    console.log('effect is triggered');
-
     axios(baseUrl + url, requestOptions)
       .then((res) => {
-        console.log('res', res);
-        setIsLoading(false);
         setResponse(res.data);
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.log('error', error);
-        setIsLoading(false);
         setError(error.response.data);
+        setIsLoading(false);
       });
-  }, [isLoading, options, url]);
+  }, [isLoading, options, token, url]);
 
   return [{ isLoading, response, error }, doFetch];
 };

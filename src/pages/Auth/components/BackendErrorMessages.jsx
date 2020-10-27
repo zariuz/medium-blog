@@ -7,10 +7,10 @@ export const BackendErrorMessages = ({ backendErrors }) => {
   });
 
   return (
-    <ul className='error-messages'>
-      {errorMessages.map((errorMessage) => (
-        <li key={errorMessage}>{errorMessage}</li>
-      ))}
+    <ul className="error-messages">
+      {errorMessages.map((errorMessage) => {
+        return <li key={errorMessage}>{errorMessage}</li>;
+      })}
     </ul>
   );
 };
