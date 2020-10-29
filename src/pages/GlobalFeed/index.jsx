@@ -1,15 +1,24 @@
 import React, { useEffect } from 'react';
+import { stringify } from 'query-string';
 
 import { Feed } from 'components/Feed';
 import { useFetch } from 'hooks/useFetch';
+import { Pagination } from 'components/Pagination';
+import { getPaginator, limit } from 'utils';
 
-export const GlobalFeed = () => {
-  const apiUrl = '/articles?limit=10&offset=0';
+export const GlobalFeed = ({ location, match }) => {
+  const { offset, currentPage } = getPaginator(location.search);
+  const stringifiedParams = stringify({
+    limit,
+    offset,
+  });
+  const apiUrl = `/articles?${stringifiedParams}`;
+  const currentUrl = match.url;
   const [{ response, error, isLoading }, doFetch] = useFetch(apiUrl);
 
   useEffect(() => {
     doFetch();
-  }, [doFetch]);
+  }, [currentPage, doFetch]);
 
   return (
     <div className="home-page">
@@ -25,6 +34,12 @@ export const GlobalFeed = () => {
             {!isLoading && response && (
               <>
                 <Feed articles={response.articles} />
+                <Pagination
+                  total={response.articlesCount}
+                  limit={limit}
+                  url={currentUrl}
+                  currentPage={currentPage}
+                />
               </>
             )}
           </div>
