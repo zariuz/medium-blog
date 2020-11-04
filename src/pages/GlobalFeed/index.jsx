@@ -9,6 +9,7 @@ import { Loading } from 'components/Loading';
 import { ErrorMessage } from 'components/ErrorMessage';
 import { FeedToggler } from 'components/FeedToggler';
 import { PopularTags } from 'components/PopularTags';
+import { Banner } from 'components/Banner';
 
 export const GlobalFeed = ({ location, match }) => {
   const { offset, currentPage } = getPaginator(location.search);
@@ -25,14 +26,11 @@ export const GlobalFeed = ({ location, match }) => {
   }, [currentPage, doFetch]);
 
   return (
-    <div className='home-page'>
-      <div className='banner'>
-        <h1>Medium Clone</h1>
-        <p>A place to share knowledge</p>
-      </div>
-      <div className='container page'>
-        <div className='row'>
-          <div className='col-md-9'>
+    <div className="home-page">
+      <Banner />
+      <div className="container page">
+        <div className="row">
+          <div className="col-md-9">
             <FeedToggler />
             {isLoading && <Loading />}
             {error && <ErrorMessage />}
@@ -48,7 +46,7 @@ export const GlobalFeed = ({ location, match }) => {
               </>
             )}
           </div>
-          <div className='col-md-3'>
+          <div className="col-md-3">
             <PopularTags />
           </div>
         </div>

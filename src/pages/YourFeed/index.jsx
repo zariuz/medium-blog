@@ -11,22 +11,19 @@ import { FeedToggler } from 'components/FeedToggler';
 import { PopularTags } from 'components/PopularTags';
 import { Banner } from 'components/Banner';
 
-export const TagFeed = ({ location, match }) => {
-  const tagName = match.params.slug;
-  console.log('tagName', tagName);
+export const YourFeed = ({ location, match }) => {
   const { offset, currentPage } = getPaginator(location.search);
   const stringifiedParams = stringify({
     limit,
     offset,
-    tag: tagName,
   });
-  const apiUrl = `/articles?${stringifiedParams}`;
+  const apiUrl = `/articles/feed?${stringifiedParams}`;
   const currentUrl = match.url;
   const [{ response, error, isLoading }, doFetch] = useFetch(apiUrl);
 
   useEffect(() => {
     doFetch();
-  }, [doFetch, currentPage, tagName]);
+  }, [currentPage, doFetch]);
 
   return (
     <div className="home-page">
@@ -34,7 +31,7 @@ export const TagFeed = ({ location, match }) => {
       <div className="container page">
         <div className="row">
           <div className="col-md-9">
-            <FeedToggler tagName={tagName} />
+            <FeedToggler />
             {isLoading && <Loading />}
             {error && <ErrorMessage />}
             {!isLoading && response && (
