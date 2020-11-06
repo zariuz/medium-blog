@@ -18,7 +18,7 @@ export const Auth = (props) => {
   const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false);
   const [{ isLoading, response, error }, doFetch] = useFetch(apiUrl);
   const [, setToken] = useLocalStorage('token');
-  const [, setCurrentUserState] = useContext(CurrentUserContext);
+  const [, dispatch] = useContext(CurrentUserContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -38,36 +38,31 @@ export const Auth = (props) => {
     }
     setToken(response.user.token);
     setIsSuccessfullSubmit(true);
-    setCurrentUserState((state) => ({
-      ...state,
-      isLoggedIn: true,
-      isLoading: false,
-      currentUser: response.user,
-    }));
-  }, [response, setCurrentUserState, setToken]);
+    dispatch({ type: 'SET_AUTHORIZED', payload: response.user });
+  }, [response, dispatch, setToken]);
 
   if (isSuccessfullSubmit) {
-    return <Redirect to="/" />;
+    return <Redirect to='/' />;
   }
 
   return (
-    <div className="auth-page">
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">{pageTitle}</h1>
-            <p className="text-xs-center">
+    <div className='auth-page'>
+      <div className='container page'>
+        <div className='row'>
+          <div className='col-md-6 offset-md-3 col-xs-12'>
+            <h1 className='text-xs-center'>{pageTitle}</h1>
+            <p className='text-xs-center'>
               <Link to={descriptionLink}>{descriptionText}</Link>
             </p>
             {error && <BackendErrorMessages backendErrors={error.errors} />}
             <form onSubmit={handleSubmit}>
               <fieldset>
                 {!isLogin && (
-                  <fieldset className="form-group">
+                  <fieldset className='form-group'>
                     <input
-                      type="text"
-                      className="form-control form-control-lg"
-                      placeholder="Username"
+                      type='text'
+                      className='form-control form-control-lg'
+                      placeholder='Username'
                       value={username}
                       onChange={(e) => {
                         setUsername(e.target.value);
@@ -75,22 +70,22 @@ export const Auth = (props) => {
                     />
                   </fieldset>
                 )}
-                <fieldset className="form-group">
+                <fieldset className='form-group'>
                   <input
-                    type="email"
-                    className="form-control form-control-lg"
-                    placeholder="Email"
+                    type='email'
+                    className='form-control form-control-lg'
+                    placeholder='Email'
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
                     }}
                   />
                 </fieldset>
-                <fieldset className="form-group">
+                <fieldset className='form-group'>
                   <input
-                    type="password"
-                    className="form-control form-control-lg"
-                    placeholder="Password"
+                    type='password'
+                    className='form-control form-control-lg'
+                    placeholder='Password'
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
@@ -99,8 +94,8 @@ export const Auth = (props) => {
                 </fieldset>
                 <button
                   disabled={isLoading}
-                  className="btn btn-lg btn-primary pull-xs-right"
-                  type="submit">
+                  className='btn btn-lg btn-primary pull-xs-right'
+                  type='submit'>
                   {pageTitle}
                 </button>
               </fieldset>
