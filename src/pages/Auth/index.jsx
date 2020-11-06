@@ -4,7 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { useFetch } from 'hooks/useFetch';
 import { useLocalStorage } from 'hooks/useLocalStorage';
 import { CurrentUserContext } from 'contexts/currentUser';
-import { BackendErrorMessages } from 'pages/Auth/components/BackendErrorMessages';
+import { BackendErrorMessages } from 'components/BackendErrorMessages';
 
 export const Auth = (props) => {
   const isLogin = props.match.path === '/login';
