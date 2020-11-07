@@ -9,11 +9,14 @@ import { YourFeed } from 'pages/YourFeed';
 import { CreateArticle } from 'pages/CreateArticle';
 import { EditArticle } from 'pages/EditArticle';
 import { Settings } from 'pages/Settings';
+import { UserProfile } from 'pages/UserProfile';
 
 export const Routes = () => {
   return (
     <Switch>
       <Route path="/" component={GlobalFeed} exact />
+      <Route path="/profiles/:slug" component={UserProfile} />
+      <Route path="/profiles/:slug/favorites" component={UserProfile} />
       <Route path="/settings" component={Settings} />
       <Route path="/articles/new" component={CreateArticle} />
       <Route path="/articles/:slug/edit" component={EditArticle} />
