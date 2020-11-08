@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import classNames from 'classnames';
+import { Redirect } from 'react-router-dom';
 
 import { useFetch } from 'hooks/useFetch';
+import { CurrentUserContext } from 'contexts/currentUser';
 
 export const AddToFavorites = ({ isFavorited, favoritesCount, articleSlug }) => {
   const apiUrl = `/articles/${articleSlug}/favorite`;
@@ -10,6 +12,10 @@ export const AddToFavorites = ({ isFavorited, favoritesCount, articleSlug }) => 
   const favoritesCountWithResponse = response
     ? response.article.favoritesCount
     : favoritesCount;
+
+  const [currentUserState] = useContext(CurrentUserContext);
+  const [noLoged, setNoLoged] = useState(false);
+
   const buttonClasses = classNames({
     btn: true,
     'btn-sm': true,
@@ -19,10 +25,19 @@ export const AddToFavorites = ({ isFavorited, favoritesCount, articleSlug }) => 
 
   const handleLike = (event) => {
     event.preventDefault();
+
+    if (currentUserState.isLoggedIn === false) {
+      setNoLoged(true);
+    }
+
     doFetch({
       method: isFavoritedWithResponse ? 'delete' : 'post',
     });
   };
+
+  if (noLoged) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <button className={buttonClasses} onClick={handleLike}>

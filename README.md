@@ -1,6 +1,4 @@
-## Medium Blog
-
-React / Redux
+## Medium Blog on React
 
 In the project directory, you can run:
 
